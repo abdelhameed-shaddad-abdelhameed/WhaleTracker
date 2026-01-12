@@ -177,7 +177,20 @@ def main():
 
 if __name__ == "__main__":
     main()
-    # --- تذييل الحقوق (Footer) ---
+# --- Footer / الحقوق وروابط التواصل ---
 st.sidebar.markdown("---")
 st.sidebar.caption("Developed by **Abdelhameed Shaddad** © 2026")
+
+# رابط لينكد إن (بزر احترافي)
+st.sidebar.markdown(
+    """
+    <a href="https://www.linkedin.com/in/abdelhameed-mansour-911034151/" target="_blank" style="text-decoration: none;">
+        <div style="background-color: #0e76a8; color: white; padding: 8px; border-radius: 5px; text-align: center; font-weight: bold;">
+            👔 Connect on LinkedIn
+        </div>
+    </a>
+    """,
+    unsafe_allow_html=True
+)
+
 st.sidebar.caption("🔒 All Rights Reserved")
