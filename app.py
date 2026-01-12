@@ -129,6 +129,7 @@ def main():
     if logs:
         df = pd.DataFrame(logs, columns=["ts", "addr", "label", "chain", "asset", "change", "balance"])
         df["ts"] = pd.to_datetime(df["ts"])
+        df["balance"] = df["balance"].astype(float)
         
         # ترتيب زمني للرسم البياني
         df_chart = df.sort_values("ts")
