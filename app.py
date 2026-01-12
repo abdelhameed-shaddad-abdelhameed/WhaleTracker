@@ -177,3 +177,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+    # --- تذييل الحقوق (Footer) ---
+st.sidebar.markdown("---")
+st.sidebar.caption("Developed by **Abdelhameed Shaddad** © 2026")
+st.sidebar.caption("🔒 All Rights Reserved")
