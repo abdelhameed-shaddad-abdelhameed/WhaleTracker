@@ -1,10 +1,7 @@
-import asyncio
+
 import time
 from decimal import Decimal
 
-if hasattr(asyncio, "WindowsSelectorEventLoopPolicy"):
-    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-asyncio.set_event_loop(asyncio.new_event_loop())
 
 from WhaleTracker import BlockchainService
 import config

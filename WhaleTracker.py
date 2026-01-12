@@ -1,9 +1,4 @@
-﻿import asyncio
-# fix windows loop
-if hasattr(asyncio, "WindowsSelectorEventLoopPolicy"):
-    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-asyncio.set_event_loop(asyncio.new_event_loop())
-
+﻿
 from decimal import Decimal
 from typing import Optional
 from web3 import Web3
