@@ -1,17 +1,4 @@
-import asyncio
 import streamlit as st
-
-# --- إصلاح مشكلة Asyncio (مهم لتجنب أخطاء السيرفر) ---
-try:
-    import asyncio
-    try:
-        if hasattr(asyncio, "WindowsSelectorEventLoopPolicy"):
-            asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-    except:
-        pass
-except Exception:
-    pass
-
 import time
 from decimal import Decimal
 import pandas as pd
@@ -103,7 +90,7 @@ def main():
             t.start()
             st.info("Scanner started in background.")
 
-        # --- Footer / الحقوق وروابط التواصل (داخل السايدبار) ---
+        # --- Footer ---
         st.markdown("---")
         st.caption("Developed by **Abdelhameed Shaddad** © 2026")
         st.markdown(
@@ -142,7 +129,7 @@ def main():
     if logs:
         df = pd.DataFrame(logs, columns=["ts", "addr", "label", "chain", "asset", "change", "balance"])
         df["ts"] = pd.to_datetime(df["ts"])
-        df = df.sort_values("ts", ascending=False) # ترتيب الأحدث أولاً
+        df = df.sort_values("ts", ascending=False)
 
         st.dataframe(df, use_container_width=True)
         
