@@ -1,4 +1,5 @@
-﻿from decimal import Decimal
+﻿import time
+from decimal import Decimal
 from typing import Optional
 from web3 import Web3
 from web3.exceptions import Web3Exception
@@ -24,6 +25,8 @@ class TokenService:
     @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=2, max=10), retry=retry_if_exception_type(Exception))
     def balance(self, owner: str) -> Optional[Decimal]:
         try:
+            # إضافة تأخير بسيط لتخفيف الحمل على العقدة (RPC)
+            time.sleep(0.1)
             raw = self.contract.functions.balanceOf(Web3.to_checksum_address(owner)).call()
             return Decimal(raw) / Decimal(10 ** self.decimals)
         except Exception as e:
@@ -32,7 +35,9 @@ class TokenService:
 
 class BlockchainService:
     def __init__(self, provider_url: str, chain: str = "ethereum"):
-        self.w3 = Web3(Web3.HTTPProvider(provider_url))
+        # ✅ التعديل الأول: إضافة timeout (10 ثوانٍ) لمنع تعليق البرنامج إذا انقطع الاتصال
+        self.w3 = Web3(Web3.HTTPProvider(provider_url, request_kwargs={'timeout': 10}))
+        
         self.chain = chain
         chain_tokens = config.CHAIN_TOKENS.get(chain, {})
         self.token_services = {
@@ -48,6 +53,8 @@ class BlockchainService:
 
     @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=2, max=10), retry=retry_if_exception_type(Exception))
     def get_eth_balance(self, address: str) -> Optional[Decimal]:
+        # ✅ التعديل الثاني: Rate Limiting (انتظار 0.2 ثانية) لتجنب الحظر من Infura/Alchemy
+        time.sleep(0.2)
         try:
             wei = self.w3.eth.get_balance(Web3.to_checksum_address(address))
             return Decimal(self.w3.from_wei(wei, "ether"))
