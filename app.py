@@ -129,10 +129,32 @@ def main():
     if logs:
         df = pd.DataFrame(logs, columns=["ts", "addr", "label", "chain", "asset", "change", "balance"])
         df["ts"] = pd.to_datetime(df["ts"])
-        df = df.sort_values("ts", ascending=False)
-
-        st.dataframe(df, use_container_width=True)
         
+        # ترتيب زمني للرسم البياني
+        df_chart = df.sort_values("ts")
+
+        tab1, tab2, tab3 = st.tabs(["📊 ETH Chart", "💰 Stablecoins", "📋 Raw Data"])
+        
+        with tab1:
+            st.caption("تحركات رصيد الإيثيريوم (ETH)")
+            eth_data = df_chart[df_chart["asset"] == "ETH"]
+            if not eth_data.empty:
+                st.line_chart(eth_data, x="ts", y="balance", color="#00ff00")
+            else:
+                st.info("No ETH history yet.")
+
+        with tab2:
+            st.caption("تحركات العملات المستقرة (USDT/USDC/DAI)")
+            stable_data = df_chart[df_chart["asset"].isin(["USDT", "USDC", "DAI"])]
+            if not stable_data.empty:
+                st.line_chart(stable_data, x="ts", y="balance")
+            else:
+                st.info("No Stablecoin history yet.")
+
+        with tab3:
+            # عرض الجدول مرتباً من الأحدث للأقدم
+            st.dataframe(df.sort_values("ts", ascending=False), use_container_width=True)
+            
         st.markdown("### 📥 Export Data")
         csv = df.to_csv(index=False).encode("utf-8")
         st.download_button("Download CSV", csv, "whale_logs.csv", "text/csv")
